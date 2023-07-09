@@ -42,3 +42,19 @@ public class AnalyticsCounter {
 		writer.writeSymptoms(symptoms);
 	}
 }
+				import com.hemebiotech.analytics.ISymptomReader;
+				import com.hemebiotech.analytics.ISymptomWriter;
+
+public class Main {
+	public static void main(String[] args) {
+		// Instanciation de l'ISymptomReader et de l'ISymptomWriter
+		ISymptomReader reader = new YourSymptomReader(); // Remplacez YourSymptomReader par votre propre implémentation
+		ISymptomWriter writer = new YourSymptomWriter(); // Remplacez YourSymptomWriter par votre propre implémentation
+
+		// Instanciation de l'AnalyticsCounter
+		AnalyticsCounter counter = new AnalyticsCounter(reader, writer);
+
+		// Appel des méthodes d'AnalyticsCounter dans le bon ordre
+		counter.processSymptoms();
+	}
+}
