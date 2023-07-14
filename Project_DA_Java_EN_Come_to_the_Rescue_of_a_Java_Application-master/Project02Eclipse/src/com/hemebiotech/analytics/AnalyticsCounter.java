@@ -1,60 +1,72 @@
-import com.hemebiotech.analytics.ISymptomReader;
-import com.hemebiotech.analytics.ISymptomWriter;
+package com.hemebiotech.analytics;
 
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * Browse the list, sort it alphabetically and count the occurrences
+ * Print in external file
+ */
 
 public class AnalyticsCounter {
-	private ISymptomReader reader;
-	private ISymptomWriter writer;
 
-	public AnalyticsCounter(ISymptomReader reader, ISymptomWriter writer) {
-		this.reader = reader;
-		this.writer = writer;
+	/**
+	 * Browse the list, sort it alphabetically and count the occurrences
+	 *
+	 * @param symptoms list of symptoms
+	 * @return countSymptoms list of symptoms in a natural order and count the strings occurrences
+	 */
+
+	public Map<String, Integer> CountSymptoms(List<String> symptoms) {
+
+		Map<String, Integer> countSymptoms = new TreeMap<>();
+
+		try {
+			for (String symptom : symptoms) {
+				countSymptoms.merge(symptom, 1, Integer::sum);
+			}
+			System.out.println("The symptoms.txt file was analyzed correctly");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Cause : " + e.getCause());
+		}
+		return countSymptoms;
 	}
 
-	public void processSymptoms() {
-		List<String> symptoms = getSymptoms();
-		Map<String, Integer> symptomCounts = countSymptoms(symptoms);
-		Map<String, Integer> sortedSymptoms = sortSymptoms(symptomCounts);
-		writeSymptoms(sortedSymptoms);
-	}
+	/**
+	 * Print the map in an external file
+	 *
+	 * @param countSymptoms list of symptoms in a natural order and count the strings occurrences
+	 * @param fileOut       creation of an external file
+	 * @throws IOException if the file is not created correctly
+	 */
 
-	public List<String> getSymptoms() {
-		return reader.getSymptoms();
-	}
+	public void PrintFile(Map<String, Integer> countSymptoms, File fileOut) throws IOException {
 
-	public Map<String, Integer> countSymptoms(List<String> symptoms) {
-		Map<String, Integer> symptomCounts = new HashMap<>();
+		BufferedWriter bf = new BufferedWriter(new FileWriter(fileOut));
 
-		for (String symptom : symptoms) {
-			symptomCounts.put(symptom, symptomCounts.getOrDefault(symptom, 0) + 1);
+		try {
+			for (Map.Entry entry : countSymptoms.entrySet()) {
+				bf.write(entry.getKey() + " : " + entry.getValue() + System.getProperty("line.separator"));
+			}
+			bf.close();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			System.out.println("Cause : " + e.getCause());
+			System.out.println("Message : " + e.getMessage());
 		}
 
-		return symptomCounts;
-	}
 
-	public Map<String, Integer> sortSymptoms(Map<String, Integer> symptoms) {
-		Map<String, Integer> sortedSymptoms = new TreeMap<>(symptoms);
-		return sortedSymptoms;
-	}
 
-	public void writeSymptoms(Map<String, Integer> symptoms) {
-		writer.writeSymptoms(symptoms);
-	}
-}
-				import com.hemebiotech.analytics.ISymptomReader;
-				import com.hemebiotech.analytics.ISymptomWriter;
 
-public class Main {
-	public static void main(String[] args) {
-		// Instanciation de l'ISymptomReader et de l'ISymptomWriter
-		ISymptomReader reader = new YourSymptomReader(); // Remplacez YourSymptomReader par votre propre implémentation
-		ISymptomWriter writer = new YourSymptomWriter(); // Remplacez YourSymptomWriter par votre propre implémentation
-
-		// Instanciation de l'AnalyticsCounter
-		AnalyticsCounter counter = new AnalyticsCounter(reader, writer);
-
-		// Appel des méthodes d'AnalyticsCounter dans le bon ordre
-		counter.processSymptoms();
+		System.out.println("The file " + fileOut + " has been created");
+		System.out.println("Filepath: " + fileOut.getAbsolutePath());
 	}
 }
