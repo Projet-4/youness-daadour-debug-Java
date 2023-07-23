@@ -9,64 +9,45 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Browse the list, sort it alphabetically and count the occurrences
- * Print in external file
+ * Analyzes and counts symptoms, and writes the results to an external file.
  */
-
 public class AnalyticsCounter {
 
 	/**
-	 * Browse the list, sort it alphabetically and count the occurrences
+	 * Counts the occurrences of symptoms.
 	 *
-	 * @param symptoms list of symptoms
-	 * @return countSymptoms list of symptoms in a natural order and count the strings occurrences
+	 * @param symptoms The list of symptoms.
+	 * @return A map containing the symptoms and their occurrences.
 	 */
-
-	public Map<String, Integer> CountSymptoms(List<String> symptoms) {
-
+	public Map<String, Integer> countSymptoms(List<String> symptoms) {
 		Map<String, Integer> countSymptoms = new TreeMap<>();
 
-		try {
-			for (String symptom : symptoms) {
-				countSymptoms.merge(symptom, 1, Integer::sum);
-			}
-			System.out.println("The symptoms.txt file was analyzed correctly");
+		for (String symptom : symptoms) {
+			countSymptoms.merge(symptom, 1, Integer::sum);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Cause : " + e.getCause());
-		}
+
+		System.out.println("The symptoms have been analyzed correctly.");
 		return countSymptoms;
 	}
 
 	/**
-	 * Print the map in an external file
+	 * Writes the symptom occurrences to an external file.
 	 *
-	 * @param countSymptoms list of symptoms in a natural order and count the strings occurrences
-	 * @param fileOut       creation of an external file
-	 * @throws IOException if the file is not created correctly
+	 * @param countSymptoms A map containing the symptoms and their occurrences.
+	 * @param outputFile    The file to write the results to.
+	 * @throws IOException If an error occurs while writing the file.
 	 */
-
-	public void PrintFile(Map<String, Integer> countSymptoms, File fileOut) throws IOException {
-
-		BufferedWriter bf = new BufferedWriter(new FileWriter(fileOut));
-
-		try {
-			for (Map.Entry entry : countSymptoms.entrySet()) {
-				bf.write(entry.getKey() + " : " + entry.getValue() + System.getProperty("line.separator"));
+	public void writeSymptomOccurrences(Map<String, Integer> countSymptoms, File outputFile) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+			for (Map.Entry<String, Integer> entry : countSymptoms.entrySet()) {
+				writer.write(entry.getKey() + " : " + entry.getValue() + System.getProperty("line.separator"));
 			}
-			bf.close();
-		}
-		catch (Exception e){
+		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Cause : " + e.getCause());
-			System.out.println("Message : " + e.getMessage());
+			System.out.println("Error writing the file: " + e.getMessage());
 		}
 
-
-
-
-		System.out.println("The file " + fileOut + " has been created");
-		System.out.println("Filepath: " + fileOut.getAbsolutePath());
+		System.out.println("The file " + outputFile.getName() + " has been created.");
+		System.out.println("File path: " + outputFile.getAbsolutePath());
 	}
 }
