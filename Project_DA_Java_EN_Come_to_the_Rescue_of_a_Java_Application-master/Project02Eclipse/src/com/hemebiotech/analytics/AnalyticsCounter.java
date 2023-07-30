@@ -38,16 +38,7 @@ public class AnalyticsCounter {
 	 * @throws IOException If an error occurs while writing the file.
 	 */
 	public void writeSymptomOccurrences(Map<String, Integer> countSymptoms, File outputFile) throws IOException {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-			for (Map.Entry<String, Integer> entry : countSymptoms.entrySet()) {
-				writer.write(entry.getKey() + " : " + entry.getValue() + System.getProperty("line.separator"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Error writing the file: " + e.getMessage());
-		}
-
-		System.out.println("The file " + outputFile.getName() + " has been created.");
-		System.out.println("File path: " + outputFile.getAbsolutePath());
+		WriteSymptomDataToFile writeSymptomDataToFile = new WriteSymptomDataToFile();
+		writeSymptomDataToFile.writeSymptomOccurrences(countSymptoms,outputFile);
 	}
 }

@@ -27,13 +27,13 @@ public class Main {
         Sorts in alphabetical order and counts the occurrences of the symptoms in the list
          */
         AnalyticsCounter analyticsCounter = new AnalyticsCounter();
-        Map<String, Integer> countSymptoms = analyticsCounter.CountSymptoms(symptoms);
+        Map<String, Integer> countSymptoms = analyticsCounter.countSymptoms(symptoms);
 
         /*
         Print result in the results.out file
          */
         File fileOut = new File("Results.out");
-        analyticsCounter.PrintFile(countSymptoms, fileOut);
+        analyticsCounter.writeSymptomOccurrences(countSymptoms, fileOut);
 
     }
 
